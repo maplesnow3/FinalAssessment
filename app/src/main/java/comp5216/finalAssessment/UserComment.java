@@ -1,48 +1,39 @@
 package comp5216.finalAssessment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RatingBar;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserComment extends Activity {
-    private Button commentSubButton;
-    private RatingBar toiletRatingBar;
-    private EditText etEditComment;
-    @Override
+
+    private RecyclerView commentListRecycle;
+    private UserCommentListAdapter userCommentListAdapter;
+    private Button commentAddButtonTop;
+    private Button commentAddButtonBot;
+    private List<Comment> commentList;
+
+
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //set up layout object
-        toiletRatingBar = (RatingBar) findViewById(R.id.toiletRatingBar);
-        commentSubButton = (Button) findViewById(R.id.commentSubButton);
-        etEditComment = (EditText) findViewById(R.id.etEditComment);
+        setContentView(R.layout.user_comment);
+        commentListRecycle = (RecyclerView) findViewById(R.id.commentListRecycle);
+        commentAddButtonBot = (Button) findViewById(R.id.commentAddButtonBot);
+        commentAddButtonTop = (Button) findViewById(R.id.commentAddButtonTop);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserComment.this);
+        commentListRecycle.setLayoutManager(linearLayoutManager);
+        commentList = new ArrayList<Comment>();
+        //use for testing
+        Comment comment = new Comment("Good",3,"Pen");
+        commentList.add(comment);
+        userCommentListAdapter = new UserCommentListAdapter(UserComment.this,commentList);
+        commentListRecycle.setAdapter(userCommentListAdapter);
     }
 
-    public void onCommentSubClick(View v){
-        // obtain user input in the comment input box
-        String userComment = etEditComment.getText().toString();
-        // ensure user type in comment
-        if(userComment.equals("") ){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Comment Required")
-                    .setMessage("Please input your comment on the toilet")
-                    .setPositiveButton("Ok", new
-                            DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
-                            });
-            builder.create().show();
-        }
-        // get the toilet rating rated by user
-        float toiletRating = toiletRatingBar.getRating();
-    }
-
-    public void onCommentCancelClick(View v) {
-
-    }
 }

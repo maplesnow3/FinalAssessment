@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/textViewCommentAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:text="Your comment on the toilet"
+        />
+
+    <EditText
+        android:id="@+id/etEditComment"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/toiletRatingBar"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="10dp"
+        android:background="@drawable/comment_box"
+        android:gravity="top|start"
+        android:textColor="@color/white">
+        <requestFocus />
+    </EditText>
+
+    <RatingBar
+        android:id="@+id/toiletRatingBar"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textViewCommentAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1">
+    </RatingBar>
+
+    <Button
+        android:id="@+id/commentSubButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etEditComment"
+        android:text="Submit"
+        android:layout_alignEnd="@id/etEditComment"
+        android:onClick="onCommentSubClick">
+    </Button>
+
+    <Button
+        android:id="@+id/commentCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etEditComment"
+        android:layout_alignStart="@id/etEditComment"
+        android:text="Cancel"
+        android:onClick="onCommentCancelClick">
+    </Button>
+
+</RelativeLayout>
