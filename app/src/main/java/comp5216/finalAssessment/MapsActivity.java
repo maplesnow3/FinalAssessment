@@ -2,9 +2,13 @@ package comp5216.finalAssessment;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,16 +27,32 @@ import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.EncodedPolyline;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import comp5216.finalAssessment.databinding.ActivityMapsBinding;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private double destLong;
+    private double destLat;
+    private double oriLong;
+    private double oriLat;
+    private String toiName;
+    private String toiID;
+    private String token;
+    private Button btnComment;
+    private Button btnMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +60,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setUpMapIfNeeded();
+
+        Intent intent = getIntent();
+        toiID = intent.getStringExtra("toiletID");
+        token = intent.getStringExtra("token");
+        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
+        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
+
+
+
+
+
+        btnComment = findViewById(R.id.button6);
+        btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this, UserComment.class);
+                intent.putExtra("toiletId", toiID);
+                startActivity(intent);
+            }
+        });
+
+        btnMenu = findViewById(R.id.button2);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this, HomePage.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        String urlSend = "http://81.68.198.152:7429/api/toilets/" + toiID;
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request request = new Request.Builder()
+                .url(urlSend)
+                .method("GET", null)
+                .addHeader("Authorization", token)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        try {
+            Response response;
+            response = client.newCall(request).execute();
+            String resStr = response.body().string();
+            JSONObject json = new JSONObject(resStr);
+            destLong = json.getDouble("longitude");
+            destLat = json.getDouble("latitude");
+            toiName = json.getString("name");
+        }
+        catch (JSONException J){
+            J.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpMapIfNeeded() {
@@ -72,10 +148,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Map is ready to be used!", Toast.LENGTH_SHORT).show();
 
             // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(-33.8692, 151.2089);
-            LatLng destination = new LatLng(-33.8882, 151.19372);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
+            LatLng sydney = new LatLng(oriLat, oriLong);
+            LatLng destination = new LatLng(destLat, destLong);
+            mMap.addMarker(new MarkerOptions().position(sydney).title("You are here!"));
+            mMap.addMarker(new MarkerOptions().position(destination).title(toiName));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             List<LatLng> path = new ArrayList();
 
@@ -84,7 +160,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             GeoApiContext context = new GeoApiContext.Builder()
                     .apiKey("AIzaSyA-M5tJtvEM7daiicTVOmOm31nb2KBfgxI")
                     .build();
-            DirectionsApiRequest req = DirectionsApi.getDirections(context, "-33.8692,151.2089", "-33.8882,151.19372");
+            String oriReq = oriLat + "," + oriLong;
+            String destReq = destLat + "," + destLong;
+            DirectionsApiRequest req = DirectionsApi.getDirections(context, oriReq, destReq);
             try {
                 DirectionsResult res = req.await();
 
