@@ -32,7 +32,7 @@ public class UserCommentListAdapter extends RecyclerView.Adapter<UserCommentList
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Comment comment = commentList.get(i);
         viewHolder.commentBox.setText(comment.getComment());
-        viewHolder.postedBy.setText("Posted By: "+ comment.getPostedBy());
+        viewHolder.postedAt.setText("Posted At: "+ comment.getPostedAt());
         viewHolder.userRatingBar.setRating(Long.valueOf(comment.getRating()));
 
     }
@@ -44,13 +44,13 @@ public class UserCommentListAdapter extends RecyclerView.Adapter<UserCommentList
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView postedBy;
+        public TextView postedAt;
         public RatingBar userRatingBar;
         public TextView commentBox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            postedBy = itemView.findViewById(R.id.textViewPostedBy);
+            postedAt = itemView.findViewById(R.id.textViewPostedAt);
             userRatingBar = itemView.findViewById(R.id.userRating);
             commentBox = itemView.findViewById(R.id.textViewComment);
         }

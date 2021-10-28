@@ -9,12 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class UserCommentAdding extends Activity {
     private Button commentSubButton;
     private RatingBar toiletRatingBar;
     private EditText etEditComment;
     private String username;
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +28,7 @@ public class UserCommentAdding extends Activity {
         toiletRatingBar = (RatingBar) findViewById(R.id.toiletRatingBar);
         commentSubButton = (Button) findViewById(R.id.commentSubButton);
         etEditComment = (EditText) findViewById(R.id.etEditComment);
-        // get Username from userComment
-        username = getIntent().getExtras().getString("username");
+
     }
 
     public void onCommentSubClick(View v){
@@ -45,11 +49,15 @@ public class UserCommentAdding extends Activity {
         // get the toilet rating rated by user
         float ToiletRating = toiletRatingBar.getRating();
         int ItoiletRating = Math.round(ToiletRating);
+        // get current time at String format
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String submitTime = sdf.format(timestamp);
         // Prepare data intent for sending it back
         Intent data = new Intent();
         // Pass relevant data back as a result
         data.putExtra("toiletRating", ItoiletRating);
         data.putExtra("userComment", userComment);
+        data.putExtra("submitTime", submitTime);
         // Activity finishes OK, return the data
         setResult(RESULT_OK, data); // Set result code and bundle data for response
         finish(); // Close the activity, pass data to parent

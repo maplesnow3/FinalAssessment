@@ -3,12 +3,12 @@ package comp5216.finalAssessment;
 public class Comment {
     private String comment;
     private int rating;
-    private String postedBy;
+    private String postedAt;
 
-    public Comment(String comment,int rating,String postedBy){
+    public Comment(String comment,int rating,String postedAt){
         this.comment = comment;
         this.rating = rating;
-        this.postedBy = postedBy;
+        this.postedAt = postedAt;
     }
 
     public int getRating() {
@@ -19,7 +19,7 @@ public class Comment {
         return  comment;
     }
 
-    public String getPostedBy() {
-        return postedBy;
+    public String getPostedAt() {
+        return postedAt;
     }
 }

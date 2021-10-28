@@ -73,12 +73,16 @@ public class UserComment extends Activity {
                 JSONObject jsonObject1 = json.getJSONObject(i);
                 String content = jsonObject1.optString("content");
                 Integer rating = jsonObject1.optInt("rating");
-                Comment comment = new Comment(content,rating,"Pen");
+                String submitTime = jsonObject1.optString("submitTime");
+                String fullSubmitTime = submitTime.substring(0,submitTime.lastIndexOf("."));
+                String[] dateTime = fullSubmitTime.split("T");
+                String date = dateTime[0];
+                String Time = dateTime[1].substring( 0,dateTime[1].lastIndexOf(":"));
+                Comment comment = new Comment(content,rating,date+" "+ Time);
                 commentList.add(comment);
             }
         }
         catch (JSONException J){
-            System.out.println("happy"+J.toString());
             J.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,12 +113,10 @@ public class UserComment extends Activity {
                 //Extract value needed from result extra
                 String userComment = data.getExtras().getString("userComment");
                 int toiletRating = data.getIntExtra("toiletRating",-1);
+                String submitTime = data.getExtras().getString("submitTime");
                 //handle the added item
-                Comment newUserComment =  new Comment(userComment,toiletRating,username);
+                Comment newUserComment =  new Comment(userComment,toiletRating,submitTime);
                 commentList.add(newUserComment);
-                userCommentListAdapter.notifyDataSetChanged();
-                uploadNewComment(userComment,toiletRating);
-
             }
         }
     }
