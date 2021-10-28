@@ -72,12 +72,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-        btnComment = findViewById(R.id.button6);
+        btnComment = findViewById(R.id.buttonGoToComment);
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapsActivity.this, UserComment.class);
                 intent.putExtra("toiletId", toiID);
+                intent.putExtra("token",token);
                 startActivity(intent);
             }
         });
@@ -222,4 +223,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Error - Map was null!", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

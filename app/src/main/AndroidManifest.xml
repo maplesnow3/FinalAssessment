@@ -2,15 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="comp5216.finalAssessment">
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network"
-
-        android:theme="@style/Theme.FinalAssessment">
+        android:theme="@style/Theme.FinalAssessment"
+        android:networkSecurityConfig="@xml/network">
         <activity
             android:name=".HomePage"
             android:exported="true">
