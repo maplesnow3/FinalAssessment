@@ -31,6 +31,10 @@ public class UserCommentAdding extends Activity {
 
     }
 
+    /**
+     * Put the added comment into the intent and pass it to the UserComment activity
+     * After user click on CommentSubButton
+     */
     public void onCommentSubClick(View v){
         // obtain user input in the comment input box
         String userComment = etEditComment.getText().toString();
@@ -63,7 +67,12 @@ public class UserCommentAdding extends Activity {
         finish(); // Close the activity, pass data to parent
     }
 
+    /**
+     *  Discard the added comment by the user and change activity to UserComment Activity
+     *  After user click on CommentCancelButton
+     */
     public void onCommentCancelClick(View v) {
+        // set up alert box to alert user that the added comment will be discarded
         AlertDialog.Builder builder = new AlertDialog.Builder(UserCommentAdding.this);
         builder.setTitle("Stop Adding Comment")
                 .setMessage("Are you sure you want stop adding comment?" +

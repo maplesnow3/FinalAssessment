@@ -33,47 +33,52 @@ public class UserComment extends Activity {
     private Button commentAddButtonTop;
     private Button commentAddButtonBot;
     private List<Comment> commentList;
-    //use for testing
-    private String username = "PenUpload";
     private String toiID;
     private String token;
 
 
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        //set up the view for the User Comment Activity
         setContentView(R.layout.user_comment);
         commentListRecycle = (RecyclerView) findViewById(R.id.commentListRecycle);
         commentAddButtonBot = (Button) findViewById(R.id.commentAddButtonBot);
         commentAddButtonTop = (Button) findViewById(R.id.commentAddButtonTop);
+        // set up the layout manager for the recycle list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserComment.this);
         commentListRecycle.setLayoutManager(linearLayoutManager);
+        // create comment list to store the comment data for the particular toilet
         commentList = new ArrayList<Comment>();
+        //Create intent to get toiletId and token for the database
         Intent intent = getIntent();
         toiID = intent.getStringExtra("toiletID");
         token = intent.getStringExtra("token");
 
+        // set up the connection of the database
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        String toiID = "1";
         String urlSend = "http://81.68.198.152:7429/api/comments/" + toiID;
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://81.68.198.152:7429/api/comments/1")
+                .url(urlSend)
                 .method("GET", null)
                 .addHeader("Authorization", token)
                 .build();
         try {
+            // obtain comment data from the cloud database
             Response response = client.newCall(request).execute();
             String resStr = response.body().string();
             JSONArray json = new JSONArray(resStr);
+            /* get all comment content,rating and submitTime from the database
+               and put it in the commentList*/
             for(int i=0;i<json.length();i++){
                 JSONObject jsonObject1 = json.getJSONObject(i);
                 String content = jsonObject1.optString("content");
                 Integer rating = jsonObject1.optInt("rating");
                 String submitTime = jsonObject1.optString("submitTime");
+                // change submitTime format into readable format
                 String fullSubmitTime = submitTime.substring(0,submitTime.lastIndexOf("."));
                 String[] dateTime = fullSubmitTime.split("T");
                 String date = dateTime[0];
@@ -87,25 +92,32 @@ public class UserComment extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // set up the adapter for the recycleList
         userCommentListAdapter = new UserCommentListAdapter(UserComment.this,commentList);
         commentListRecycle.setAdapter(userCommentListAdapter);
     }
 
+    /**
+     * Change the activity to UserCommentAdding view.
+     * After user click on CommentAddButton
+     */
     public void onCommentAddClick(View v){
         Intent intent = new Intent(UserComment.this, UserCommentAdding.class);
-        // should put username obtained from DB
-        intent.putExtra("username",username);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, USER_COMMENT_ADDING_REQUEST_CODE);
         }
     }
 
+    /**
+     * Change the activity to MapsActivity view.
+     * After user click on CommentBackButton
+     */
     public void onCommentBackClick(View v){
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
         startActivity(intent);
     }
 
-
+    @Override
     protected void onActivityResult(int requestCode,int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         if(requestCode == USER_COMMENT_ADDING_REQUEST_CODE){
@@ -117,10 +129,17 @@ public class UserComment extends Activity {
                 //handle the added item
                 Comment newUserComment =  new Comment(userComment,toiletRating,submitTime);
                 commentList.add(newUserComment);
+                // upload the data into database
+                uploadNewComment(userComment,toiletRating);
             }
         }
     }
 
+    /**
+     * upload the newly added comment into the cloud database
+     * @param content the user comment in words
+     * @param rating the toilet rating given by the user
+     */
     public void uploadNewComment(String content, int rating){
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
