@@ -118,6 +118,8 @@ public class UserComment extends Activity {
      */
     public void onCommentBackClick(View v){
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("toiletId", toiID);
         startActivity(intent);
     }
 
@@ -143,6 +145,8 @@ public class UserComment extends Activity {
             e.printStackTrace();
         }
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("toiletId", toiID);
         startActivity(intent);
     }
 
