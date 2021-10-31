@@ -62,7 +62,7 @@ public class UserLogin extends AppCompatActivity {
                 }
                 else if(UserName.equals("admin") && PassWord.equals("123")){
                     Toast.makeText(UserLogin.this, "Login as adminstraor success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(UserLogin.this, MapPage.class);
+                    Intent intent = new Intent(UserLogin.this, MainActivity.class);
                     startActivity(intent);
                 }
                 else{
@@ -159,7 +159,7 @@ public class UserLogin extends AppCompatActivity {
                             token = json.getString("data");
                             //Toast.makeText(UserLogin.this, "Log in successful", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(UserLogin.this, MapPage.class);
-                            intent.putExtra(token, token);
+                            intent.putExtra("token", token);
                             startActivity(intent);
                         }
 

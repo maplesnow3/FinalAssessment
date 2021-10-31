@@ -63,12 +63,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpMapIfNeeded();
 
         Intent intent = getIntent();
-        toiID = intent.getStringExtra("toiletID");
-        token = intent.getStringExtra("token");
-        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
-        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
+//        toiID = intent.getStringExtra("toiletID");
+//        token = intent.getStringExtra("token");
+//        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
+//        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
+        System.out.println(oriLat);
+        System.out.println(oriLong);
 
-
+        token ="eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOjcsImNyZWF0ZVRpbWUiOjE2MzU2NDA2OTE1NDMsInVzZXJuYW1lIjoiMTIzMTIzIiwiZXhwIjoxNjM1ODIwNjkxfQ.hv4W9EsOPznrx9RCCYDbNUnQo0_aY24c3kvhwO63v2wu-uw307su-HL7HsLhSSX1Go5jkwhANQ0NuZtEmDttrA";
+        toiID = "2";
+        oriLat = -33.1251;
+        oriLong = 151.2203;
 
 
 
@@ -77,8 +82,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapsActivity.this, UserComment.class);
-                intent.putExtra("toiletId", toiID);
-                intent.putExtra("token",token);
+                Bundle bundle = new Bundle();
+                bundle.putString("toiletId", toiID);
+                bundle.putString("token", token);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -87,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapsActivity.this, HomePage.class);
+                Intent intent = new Intent(MapsActivity.this, MapPage.class);
                 startActivity(intent);
             }
         });
@@ -223,5 +230,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Error - Map was null!", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

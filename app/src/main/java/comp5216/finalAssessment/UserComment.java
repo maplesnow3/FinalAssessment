@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +31,7 @@ public class UserComment extends Activity {
     private static final int USER_COMMENT_ADDING_REQUEST_CODE = 101;
     private Button commentAddButtonTop;
     private Button commentAddButtonBot;
-    private List<Comment> commentList;
+    private List<ToiletComment> commentList;
     private String toiID;
     private String token;
 
@@ -49,10 +48,10 @@ public class UserComment extends Activity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserComment.this);
         commentListRecycle.setLayoutManager(linearLayoutManager);
         // create comment list to store the comment data for the particular toilet
-        commentList = new ArrayList<Comment>();
+        commentList = new ArrayList<ToiletComment>();
         //Create intent to get toiletId and token for the database
         Intent intent = getIntent();
-        toiID = intent.getStringExtra("toiletID");
+        toiID = intent.getStringExtra("toiletId");
         token = intent.getStringExtra("token");
 
         // set up the connection of the database
@@ -83,7 +82,7 @@ public class UserComment extends Activity {
                 String[] dateTime = fullSubmitTime.split("T");
                 String date = dateTime[0];
                 String Time = dateTime[1].substring( 0,dateTime[1].lastIndexOf(":"));
-                Comment comment = new Comment(content,rating,date+" "+ Time);
+                ToiletComment comment = new ToiletComment(content,rating,date+" "+ Time);
                 commentList.add(comment);
             }
         }
@@ -127,9 +126,10 @@ public class UserComment extends Activity {
                 int toiletRating = data.getIntExtra("toiletRating",-1);
                 String submitTime = data.getExtras().getString("submitTime");
                 //handle the added item
-                Comment newUserComment =  new Comment(userComment,toiletRating,submitTime);
+                ToiletComment newUserComment =  new ToiletComment(userComment,toiletRating,submitTime);
                 commentList.add(newUserComment);
                 // upload the data into database
+                userCommentListAdapter.notifyDataSetChanged();
                 uploadNewComment(userComment,toiletRating);
             }
         }

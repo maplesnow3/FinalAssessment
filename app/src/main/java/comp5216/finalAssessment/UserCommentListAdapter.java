@@ -15,8 +15,8 @@ import java.util.List;
 public class UserCommentListAdapter extends RecyclerView.Adapter<UserCommentListAdapter.ViewHolder> {
 
     public Context mContext;
-    public List<Comment> commentList;
-    public UserCommentListAdapter(Context mContext, List<Comment> commentList){
+    public List<ToiletComment> commentList;
+    public UserCommentListAdapter(Context mContext, List<ToiletComment> commentList){
         this.mContext= mContext ;
         this.commentList= commentList ;
     }
@@ -30,7 +30,7 @@ public class UserCommentListAdapter extends RecyclerView.Adapter<UserCommentList
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Comment comment = commentList.get(i);
+        ToiletComment comment = commentList.get(i);
         viewHolder.commentBox.setText(comment.getComment());
         viewHolder.postedAt.setText("Posted At: "+ comment.getPostedAt());
         viewHolder.userRatingBar.setRating(Long.valueOf(comment.getRating()));
