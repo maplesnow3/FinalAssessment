@@ -9,10 +9,17 @@
         <entry key="..\:/Users/choip/Desktop/Grduate diploma of computing/Comp5216 Mobile Computing/FinalAssessment/app/src/main/res/layout/comment_list_recycle.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/choip/Desktop/Grduate diploma of computing/Comp5216 Mobile Computing/FinalAssessment/app/src/main/res/layout/user_comment.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/choip/Desktop/Grduate diploma of computing/Comp5216 Mobile Computing/FinalAssessment/app/src/main/res/layout/user_comment_adding.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/activity_comment.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/activity_comment_list.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.10012447852615597" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/activity_repair.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/comment_item.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/comment_list_recycle.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/comment_toilet_item.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/mappage.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/toilet_map.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/user_comment.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/user_comment.xml" value="0.25892857142857145" />
         <entry key="app/src/main/res/layout/user_comment_adding.xml" value="0.21770833333333334" />
       </map>
     </option>

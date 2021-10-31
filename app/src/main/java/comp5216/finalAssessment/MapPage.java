@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -43,9 +44,9 @@ import okhttp3.Response;
 
 public class MapPage extends AppCompatActivity {
     private ListView lv;
-    private double longitude=0, latitude=0, toiletLongitude, toiletLatitude;
+    private double longitude = 0, latitude = 0, toiletLongitude, toiletLatitude;
     private LocationManager locationManager;
-    private ArrayList<String> toiletList;
+    private volatile ArrayList<String> toiletList;
     private ArrayAdapter<String> toiletAdapter;
     private String locationProvider, buildingName;
     private String token;
@@ -54,14 +55,23 @@ public class MapPage extends AppCompatActivity {
     private Location location;
     private Thread newThread;
     private JSONObject jsnobject;
-    private ArrayList<String> idList;
+    private volatile ArrayList<String> idList;
 
+    public MapPage() {
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mappage);
         lv = findViewById(R.id.listView);
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
 
         if (ContextCompat.checkSelfPermission(MapPage.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {//no permission of location service
@@ -70,40 +80,70 @@ public class MapPage extends AppCompatActivity {
         } else {
             Toast.makeText(MapPage.this, "已开启定位权限", Toast.LENGTH_LONG).show();
             //getLocation(MapPage.this);
-            try {
-                getToiletList();
+            ArrayList<String> toiletList = new ArrayList<>();
+            ArrayList<String> idList = new ArrayList<>();
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            //StrictMode.setThreadPolicy(policy);
+            String Uri = "http://81.68.198.152:7429/api/toilets?latitude=" + latitude + "&longitude=" + longitude;
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(Uri)
+                    .method("GET", null)
+                    .addHeader("Authorization", token)
+                    .build();
 
-            }catch(IOException e){
+            try {
+
+                Response response = okHttpClient.newCall(request).execute();
+                String jsonString = response.body().string();
+                JSONArray jsonarray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonarray.length(); i++) {
+                    JSONObject obj = jsonarray.getJSONObject(i);
+                    String id = String.valueOf(obj.getInt("toiletId"));
+                    String value = obj.getString("name");
+                    toiletList.add(value);
+                    idList.add(id);
+                }
+
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
+
+            toiletAdapter = new ArrayAdapter<String>(MapPage.this, android.R.layout.simple_list_item_1, toiletList);
+            lv.setAdapter(toiletAdapter);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    Intent intent = new Intent(MapPage.this, MapsActivity.class);
+                    for (int length = 0; length < idList.size(); length ++){
+                        if (length == i){
+                            toiletId = idList.get(length);
+                        }
+                    }
+                    System.out.println("id send" + toiletId);
+                    System.out.println(toiletList);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("toiletId", toiletId);
+                    bundle.putString("token", token);
+                    bundle.putString("oriLong", String.valueOf(longitude));
+                    bundle.putString("oriLat", String.valueOf(latitude));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+
+
         }
-        System.out.println(longitude);
-        System.out.println(latitude);
         System.out.println(token);
-        System.out.println(idList);
-        System.out.println(toiletList);
-        token = getIntent().getStringExtra("token");
 
+        Button signOutButton = findViewById(R.id.SignOut);
 
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
+        signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MapPage.this, MapsActivity.class);
-//                for (int length =0; length < idList.size(); length ++){
-//                    if (length == i){
-//                        toiletId = idList.get(length);
-//                    }
-//                }
-                System.out.println(idList);
-                System.out.println(toiletList);
-                Bundle bundle = new Bundle();
-                bundle.putString("toiletId", String.valueOf(i));
-                bundle.putString("token", token);
-                bundle.putString("oriLong", String.valueOf(longitude));
-                bundle.putString("oriLat", String.valueOf(latitude));
-                intent.putExtras(bundle);
+            public void onClick(View view) {
+                Intent intent = new Intent(MapPage.this, UserLogin.class);
                 startActivity(intent);
             }
         });
@@ -117,11 +157,11 @@ public class MapPage extends AppCompatActivity {
         switch (requestCode) {
             case 200://刚才的识别码
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {//用户同意权限,执行我们的操作
-                  //  getLocation(MapPage.this);
+                    //  getLocation(MapPage.this);
                     try {
                         getToiletList();
 
-                    }catch(IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {//用户拒绝之后,当然我们也可以弹出一个窗口,直接跳转到系统设置页面
@@ -168,60 +208,7 @@ public class MapPage extends AppCompatActivity {
     }
 
 
-
     private void getToiletList() throws IOException {
-        ArrayList<String> toiletList = new ArrayList<>();
-        ArrayList<String> idList = new ArrayList<>();
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
-        String Uri = "http://81.68.198.152:7429/api/toilets?latitude=" + latitude + "&longitude=" + longitude;
-
-       newThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(Uri)
-                        .method("GET", null)
-                        .addHeader("Authorization", token)
-                        .build();
-
-                try {
-
-                    Response response = okHttpClient.newCall(request).execute();
-                    String jsonString = response.body().string();
-                    JSONArray jsonarray = new JSONArray(jsonString);
-                    for(int i=0; i<jsonarray.length(); i++)
-                    {
-                        JSONObject obj=jsonarray.getJSONObject(i);
-                        String id = String.valueOf(obj.getInt("toiletId"));
-                        String value = obj.getString("name");
-                        toiletList.add(value);
-                        idList.add(id);
-                    }
-
-                } catch (JSONException | IOException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        toiletAdapter = new ArrayAdapter<String>(MapPage.this, android.R.layout.simple_list_item_1, toiletList);
-                        lv.setAdapter(toiletAdapter);
-                        System.out.println("id" + idList);
-                        System.out.println("list" + toiletList);
-                    }
-                 });
-
-
-                // for (Object object : jsonArray) {
-                //    JSONObject jsonObject = (JSONObject)object;
-                //    Student student = new Student(jsonObject.getString("name"), jsonObject.getInteger("age"), jsonObject.getString("gender"));
-                //    studentList.add(student);
-            }
-
-        });
-        newThread.start();
 
 
     }

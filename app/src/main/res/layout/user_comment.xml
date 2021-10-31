@@ -22,25 +22,8 @@
         android:onClick="onCommentAddClick">
     </Button>
 
-    <Button
-        android:id="@+id/commentAddButtonBot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Comment"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="onCommentAddClick">
-    </Button>
 
-    <Button
-        android:id="@+id/commentBackButtonBot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="onCommentBackClick">
-    </Button>
+
 
     <Button
         android:id="@+id/commentBackButtonTop"
@@ -57,7 +40,6 @@
         android:id="@+id/commentListRecycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/commentAddButtonBot"
-        android:layout_below="@id/commentAddButtonTop"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@id/commentAddButtonTop" />
 
 </RelativeLayout>

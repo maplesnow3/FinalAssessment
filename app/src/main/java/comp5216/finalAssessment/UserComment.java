@@ -42,7 +42,6 @@ public class UserComment extends Activity {
         //set up the view for the User Comment Activity
         setContentView(R.layout.user_comment);
         commentListRecycle = (RecyclerView) findViewById(R.id.commentListRecycle);
-        commentAddButtonBot = (Button) findViewById(R.id.commentAddButtonBot);
         commentAddButtonTop = (Button) findViewById(R.id.commentAddButtonTop);
         // set up the layout manager for the recycle list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserComment.this);

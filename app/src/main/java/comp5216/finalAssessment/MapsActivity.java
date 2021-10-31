@@ -63,17 +63,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpMapIfNeeded();
 
         Intent intent = getIntent();
-//        toiID = intent.getStringExtra("toiletID");
-//        token = intent.getStringExtra("token");
+        toiID = intent.getStringExtra("toiletId");
+        token = intent.getStringExtra("token");
 //        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
 //        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
-        System.out.println(oriLat);
-        System.out.println(oriLong);
+        System.out.println("toiid" + toiID);
+        System.out.println("token: " + token);
 
-        token ="eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOjcsImNyZWF0ZVRpbWUiOjE2MzU2NDA2OTE1NDMsInVzZXJuYW1lIjoiMTIzMTIzIiwiZXhwIjoxNjM1ODIwNjkxfQ.hv4W9EsOPznrx9RCCYDbNUnQo0_aY24c3kvhwO63v2wu-uw307su-HL7HsLhSSX1Go5jkwhANQ0NuZtEmDttrA";
-        toiID = "2";
+//        token ="eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOjcsImNyZWF0ZVRpbWUiOjE2MzU2NDA2OTE1NDMsInVzZXJuYW1lIjoiMTIzMTIzIiwiZXhwIjoxNjM1ODIwNjkxfQ.hv4W9EsOPznrx9RCCYDbNUnQo0_aY24c3kvhwO63v2wu-uw307su-HL7HsLhSSX1Go5jkwhANQ0NuZtEmDttrA";
+//        toiID = "1";
         oriLat = -33.1251;
         oriLong = 151.2203;
+        System.out.println("toiid_:" + toiID);
+        System.out.println("token_: " + token);
 
 
 
@@ -95,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapsActivity.this, MapPage.class);
+                intent.putExtra("token", token);
                 startActivity(intent);
             }
         });
@@ -120,6 +123,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             destLong = json.getDouble("longitude");
             destLat = json.getDouble("latitude");
             toiName = json.getString("name");
+            System.out.println(json);
+            System.out.println(toiName);
+            System.out.println(destLat);
+            System.out.println(destLong);;
         }
         catch (JSONException J){
             J.printStackTrace();
