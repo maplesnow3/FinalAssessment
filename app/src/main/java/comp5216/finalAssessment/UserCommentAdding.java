@@ -49,22 +49,23 @@ public class UserCommentAdding extends Activity {
                                 }
                             });
             builder.create().show();
+        }else {
+            // get the toilet rating rated by user
+            float ToiletRating = toiletRatingBar.getRating();
+            int ItoiletRating = Math.round(ToiletRating);
+            // get current time at String format
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            String submitTime = sdf.format(timestamp);
+            // Prepare data intent for sending it back
+            Intent data = new Intent();
+            // Pass relevant data back as a result
+            data.putExtra("toiletRating", ItoiletRating);
+            data.putExtra("userComment", userComment);
+            data.putExtra("submitTime", submitTime);
+            // Activity finishes OK, return the data
+            setResult(RESULT_OK, data); // Set result code and bundle data for response
+            finish(); // Close the activity, pass data to parent
         }
-        // get the toilet rating rated by user
-        float ToiletRating = toiletRatingBar.getRating();
-        int ItoiletRating = Math.round(ToiletRating);
-        // get current time at String format
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String submitTime = sdf.format(timestamp);
-        // Prepare data intent for sending it back
-        Intent data = new Intent();
-        // Pass relevant data back as a result
-        data.putExtra("toiletRating", ItoiletRating);
-        data.putExtra("userComment", userComment);
-        data.putExtra("submitTime", submitTime);
-        // Activity finishes OK, return the data
-        setResult(RESULT_OK, data); // Set result code and bundle data for response
-        finish(); // Close the activity, pass data to parent
     }
 
     /**
