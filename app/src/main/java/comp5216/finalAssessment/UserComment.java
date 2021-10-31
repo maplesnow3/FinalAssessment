@@ -1,6 +1,8 @@
 package comp5216.finalAssessment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -34,7 +36,7 @@ public class UserComment extends Activity {
     private List<ToiletComment> commentList;
     private String toiID;
     private String token;
-    private boolean isDamage;
+    private boolean isDamage = false;
 
 
     @Override
@@ -94,8 +96,6 @@ public class UserComment extends Activity {
 
 
         // set up the adapter for the recycleList
-        // initialize isDamage Value to false
-        isDamage = false;
 
         userCommentListAdapter = new UserCommentListAdapter(UserComment.this,commentList);
         commentListRecycle.setAdapter(userCommentListAdapter);
@@ -118,8 +118,6 @@ public class UserComment extends Activity {
      */
     public void onCommentBackClick(View v){
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
-        intent.putExtra("token", token);
-        intent.putExtra("toiletId", toiID);
         startActivity(intent);
     }
 
@@ -141,14 +139,26 @@ public class UserComment extends Activity {
                 .build();
         try {
             Response response = client.newCall(request).execute();
+            AlertDialog.Builder builder = new AlertDialog.Builder(UserComment.this);
+            builder.setTitle("Report Damage")
+                    .setMessage("Thanks for you feedback!")
+                    .setPositiveButton("Exit", new
+                            DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(UserComment.this, MapPage.class);
+                                    intent.putExtra("token", token);
+                                    startActivity(intent);
+                                }
+                            });
+            builder.create().show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Intent intent = new Intent(UserComment.this, MapsActivity.class);
-        // pass back token and toiId to MapsActivity
-        intent.putExtra("token", token);
-        intent.putExtra("toiletId", toiID);
-        startActivity(intent);
+
+
+
+
     }
 
     @Override
