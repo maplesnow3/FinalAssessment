@@ -23,8 +23,6 @@
     </Button>
 
 
-
-
     <Button
         android:id="@+id/commentBackButtonTop"
         android:layout_width="wrap_content"
@@ -36,10 +34,25 @@
         android:onClick="onCommentBackClick">
     </Button>
 
+    <Button
+        android:id="@+id/commentReportDmgButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onReportDmgClick"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Report damage"
+        android:layout_marginLeft="30dp"
+        >
+    </Button>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentListRecycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/commentAddButtonTop" />
+        android:layout_above="@+id/commentReportDmgButton"
+        android:layout_below="@id/commentAddButtonTop">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

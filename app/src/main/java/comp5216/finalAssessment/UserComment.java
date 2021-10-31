@@ -34,6 +34,7 @@ public class UserComment extends Activity {
     private List<ToiletComment> commentList;
     private String toiID;
     private String token;
+    private boolean isDamage;
 
 
     @Override
@@ -90,7 +91,12 @@ public class UserComment extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         // set up the adapter for the recycleList
+        // initialize isDamage Value to false
+        isDamage = false;
+
         userCommentListAdapter = new UserCommentListAdapter(UserComment.this,commentList);
         commentListRecycle.setAdapter(userCommentListAdapter);
     }
@@ -111,6 +117,31 @@ public class UserComment extends Activity {
      * After user click on CommentBackButton
      */
     public void onCommentBackClick(View v){
+        Intent intent = new Intent(UserComment.this, MapsActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Report damage to the cloud database.
+     * After user click on ReportDmgButton
+     */
+    public void onReportDmgClick(View v){
+        isDamage = true;
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, "isDamage="+isDamage+"&toiletId="+toiID);
+        Request request = new Request.Builder()
+                .url("http://81.68.198.152:7429/api/toilets/")
+                .method("POST", body)
+                .addHeader("Authorization", token)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
         startActivity(intent);
     }
