@@ -4,6 +4,9 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -115,12 +118,18 @@ public class UserLogin extends AppCompatActivity {
                     try {
                         Response response;
                         response = okHttpClient.newCall(request).execute();
+                        Looper.prepare();
+                        Handler  mHandler = new Handler(Looper.myLooper()) {
+                            public void handleMessage(Message msg) {
+                                // process incoming messages here
+                            }
+                        };
                         if(response.code() == 500){
                             Toast.makeText(UserLogin.this, "Sign up failed, password needs contain uppercase and lowercase letter with number", Toast.LENGTH_LONG).show();
-
                         }else{
                             Toast.makeText(UserLogin.this, "Sign up successful, please log in with your username and password", Toast.LENGTH_LONG).show();
                         }
+                        Looper.loop();
 
                     } catch (IOException e) {
 
@@ -150,9 +159,16 @@ public class UserLogin extends AppCompatActivity {
                         Response response;
                         response = okHttpClient.newCall(request).execute();
                         String jsonString = response.body().string();
+                        Looper.prepare();
+                        Handler mHandler = new Handler(Looper.myLooper()) {
+                            public void handleMessage(Message msg) {
+                                // process incoming messages here
+                            }
+                        };
                         if (response.code() == 500) {
                             Toast.makeText(UserLogin.this, "Log in failed, password needs contain uppercase " +
                                     "and lowercase letter with number", Toast.LENGTH_LONG).show();
+                            Looper.loop();
                         } else {
 
                             JSONObject json = new JSONObject(jsonString);
