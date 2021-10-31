@@ -145,6 +145,7 @@ public class UserComment extends Activity {
             e.printStackTrace();
         }
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
+        // pass back token and toiId to MapsActivity
         intent.putExtra("token", token);
         intent.putExtra("toiletId", toiID);
         startActivity(intent);
