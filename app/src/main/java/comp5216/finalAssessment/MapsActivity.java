@@ -65,17 +65,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         toiID = intent.getStringExtra("toiletId");
         token = intent.getStringExtra("token");
-//        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
-//        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
+        oriLong = Double.parseDouble(intent.getStringExtra("oriLong"));
+        oriLat = Double.parseDouble(intent.getStringExtra("oriLat"));
         System.out.println("toiid" + toiID);
         System.out.println("token: " + token);
+        System.out.println("orilong" + oriLong);
+        System.out.println("orilat" + oriLat);
 
-//        token ="eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOjcsImNyZWF0ZVRpbWUiOjE2MzU2NDA2OTE1NDMsInVzZXJuYW1lIjoiMTIzMTIzIiwiZXhwIjoxNjM1ODIwNjkxfQ.hv4W9EsOPznrx9RCCYDbNUnQo0_aY24c3kvhwO63v2wu-uw307su-HL7HsLhSSX1Go5jkwhANQ0NuZtEmDttrA";
-//        toiID = "1";
-        oriLat = -33.1251;
-        oriLong = 151.2203;
-        System.out.println("toiid_:" + toiID);
-        System.out.println("token_: " + token);
+
 
 
 
@@ -87,6 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Bundle bundle = new Bundle();
                 bundle.putString("toiletId", toiID);
                 bundle.putString("token", token);
+                bundle.putString("oriLong", String.valueOf(oriLong));
+                bundle.putString("oriLat", String.valueOf(oriLat));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
