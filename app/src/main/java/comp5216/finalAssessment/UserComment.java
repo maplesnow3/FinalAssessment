@@ -35,6 +35,8 @@ public class UserComment extends Activity {
     private Button commentAddButtonBot;
     private List<ToiletComment> commentList;
     private String toiID;
+    private String oriLong;
+    private String oriLat;
     private String token;
     private boolean isDamage = false;
 
@@ -55,6 +57,8 @@ public class UserComment extends Activity {
         Intent intent = getIntent();
         toiID = intent.getStringExtra("toiletId");
         token = intent.getStringExtra("token");
+        oriLong = intent.getStringExtra("oriLong");
+        oriLat = intent.getStringExtra("oriLat");
 
         // set up the connection of the database
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -117,8 +121,14 @@ public class UserComment extends Activity {
      * After user click on CommentBackButton
      */
     public void onCommentBackClick(View v){
-        Intent intent = new Intent(UserComment.this, MapPage.class);
-        intent.putExtra("token", token);
+
+        Intent intent = new Intent(UserComment.this, MapsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("toiletId", toiID);
+        bundle.putString("token", token);
+        bundle.putString("oriLong", String.valueOf(oriLong));
+        bundle.putString("oriLat", String.valueOf(oriLat));
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
