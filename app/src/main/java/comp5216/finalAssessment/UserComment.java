@@ -121,6 +121,7 @@ public class UserComment extends Activity {
      * After user click on CommentBackButton
      */
     public void onCommentBackClick(View v){
+
         Intent intent = new Intent(UserComment.this, MapsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("toiletId", toiID);
